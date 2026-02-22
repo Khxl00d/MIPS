@@ -13,9 +13,9 @@ public class ALU {
             default:
                 result = 0;
         }
-        branch = (result == 0);
         return result;
     }
     
     
 }
+
