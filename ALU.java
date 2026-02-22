@@ -1,8 +1,5 @@
 public class ALU {
     public int result;
-    public ALU(int result){
-        this.result = result;
-    }
 
     public int ALUOutput(int readData1, int readData2, int ALUCont){
         switch(ALUCont){
@@ -18,4 +15,5 @@ public class ALU {
     
     
 }
+
 
