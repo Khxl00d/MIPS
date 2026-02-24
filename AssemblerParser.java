@@ -34,6 +34,20 @@ public class AssemblerParser {
             instruction = inMipsLine.substring(0,indexIns);
         }
 
+
+        if (insType == 1 || insType == 2) { // if insType is R or I it will parse rs
+            for (int i = indexIns+2; i <inMipsLine.length(); i++) {
+            if (inMipsLine.charAt(i) == ' ') {
+                break;
+            }
+            else {
+                indexRs++;
+            }
+        }
+        if (indexRs >= indexIns+2) {
+            instruction = inMipsLine.substring(0,indexIns);
+        }
+        }
     }
     private void identifyInsType(String instruction) {
         if (
