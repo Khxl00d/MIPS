@@ -50,7 +50,7 @@ public class AssemblerParser {
         if (indexIns >= 0) {
             instruction = inMipsLine.substring(0,indexIns);
         }
-        
+
     }
     private void identifyInsType(String instruction) {
         if (
@@ -82,6 +82,7 @@ public class AssemblerParser {
         }
     }
     private void identifyOpcode() {
+        
         if (insType == 1) {
             opcode = 0;
             if (instruction.equalsIgnoreCase("add")) {
