@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 public class AssemblerParser {
     InstructionMemory saveIns;
     private String inMipsLine;
@@ -14,13 +16,28 @@ public class AssemblerParser {
     private int rs;
     private int rt;
     private int rd;
+    private HashMap<String, Integer> registersMap = new HashMap<>();
+
 
     public AssemblerParser(String inMipsLine) {
         this.inMipsLine = inMipsLine;
         this.indexIns = -1;
         this.indexRs = indexIns+1;
         this.saveIns = new InstructionMemory();
-
+        
+        registersMap.put("$zero", 0);
+        registersMap.put("$at", 1);
+        registersMap.put("$v0", 2); registersMap.put("$v1", 3);
+        registersMap.put("$a0", 4); registersMap.put("$a1", 5); registersMap.put("$a2", 6); registersMap.put("$a3", 7);
+        registersMap.put("$t0", 8); registersMap.put("$t1", 9); registersMap.put("$t2", 10); registersMap.put("$t3", 11);
+        registersMap.put("$t4", 12); registersMap.put("$t5", 13); registersMap.put("$t6", 14); registersMap.put("$t7", 15);
+        registersMap.put("$s0", 16); registersMap.put("$s1", 17); registersMap.put("$s2", 18); registersMap.put("$s3", 19);
+        registersMap.put("$s4", 20); registersMap.put("$s5", 21); registersMap.put("$s6", 22); registersMap.put("$s7", 23);
+        registersMap.put("$t8", 24); registersMap.put("$t9", 25);
+        registersMap.put("$k0", 26); registersMap.put("$k1", 27);
+        registersMap.put("$gp", 28); registersMap.put("$sp", 29); registersMap.put("$fp", 30); registersMap.put("$ra", 31);
+        
+    
         //instruction extractor
         for (int i = 0; i < inMipsLine.length(); i++) {
             if (inMipsLine.charAt(i) == ' ') {
@@ -32,21 +49,6 @@ public class AssemblerParser {
         }
         if (indexIns >= 0) {
             instruction = inMipsLine.substring(0,indexIns);
-        }
-
-
-        if (insType == 1 || insType == 2) { // if insType is R or I it will parse rs
-            for (int i = indexIns+2; i <inMipsLine.length(); i++) {
-            if (inMipsLine.charAt(i) == ' ') {
-                break;
-            }
-            else {
-                indexRs++;
-            }
-        }
-        if (indexRs >= indexIns+2) {
-            instruction = inMipsLine.substring(0,indexIns);
-        }
         }
     }
     private void identifyInsType(String instruction) {
