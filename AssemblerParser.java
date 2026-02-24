@@ -3,26 +3,24 @@ import java.util.HashMap;
 public class AssemblerParser {
     InstructionMemory saveIns;
     private String inMipsLine;
-    private String instruction;
-    private String rsString;
-    private int indexIns;
-    private int indexRs;
     private int insType; //R - type == 1 // I - Type == 2 // J - Type == 3
-    private int opcode;
-    private int shamt;
-    private int funct;
-    private int immediate;
-    private int target;
-    private int rs;
-    private int rt;
-    private int rd;
+    private int opcode = 0;
+    private int shamt = 0;
+    private int funct = 0;
+    private int immediate = 0;
+    private int target = 0;
+    private int rs = 0;
+    private int rt = 0;
+    private int rd = 0;
+    private String[] arrInstruction;
     private HashMap<String, Integer> registersMap = new HashMap<>();
-
+    private HashMap<String, int[]> rTypeMap = new HashMap<>();
+    private HashMap<String, int[]> iTypeMap = new HashMap<>();
+    private HashMap<String, int[]> jTypeMap = new HashMap<>();
 
     public AssemblerParser(String inMipsLine) {
         this.inMipsLine = inMipsLine;
-        this.indexIns = -1;
-        this.indexRs = indexIns+1;
+
         this.saveIns = new InstructionMemory();
 
         registersMap.put("$zero", 0);
@@ -37,125 +35,102 @@ public class AssemblerParser {
         registersMap.put("$k0", 26); registersMap.put("$k1", 27);
         registersMap.put("$gp", 28); registersMap.put("$sp", 29); registersMap.put("$fp", 30); registersMap.put("$ra", 31);
         
-    
-        //instruction extractor
-        for (int i = 0; i < inMipsLine.length(); i++) {
-            if (inMipsLine.charAt(i) == ' ') {
-                break;
-            }
-            else {
-                indexIns++;
-            }
+        //R-type Instructions {opcode,funct} opcode is 0 by default
+        rTypeMap.put("add", new int[]{0,32});
+        rTypeMap.put("and", new int[]{0, 36});
+        rTypeMap.put("or",  new int[]{0, 37});
+        rTypeMap.put("nor", new int[]{0, 39});
+        rTypeMap.put("slt", new int[]{0, 42});
+        rTypeMap.put("sll", new int[]{0, 0});
+        rTypeMap.put("jr",  new int[]{0, 8});
+
+        //I-type Instructions funct is set as -1 or any other number because it wont be stored either way
+        iTypeMap.put("addi", new int[]{8, -1});
+        iTypeMap.put("andi", new int[]{12, -1});
+        iTypeMap.put("ori",  new int[]{13, -1});
+        iTypeMap.put("lw",   new int[]{35, -1});
+        iTypeMap.put("sw",   new int[]{43, -1});
+        iTypeMap.put("beq",  new int[]{4, -1});
+
+        //J-type Instrucion
+        jTypeMap.put("j",    new int[]{2, -1});
+        jTypeMap.put("jal",  new int[]{3, -1});
+
+        arrInstruction = inMipsLine.split(" ");// if inMipsLine = addi $s0 $t0 5 then arrInstruction[0] = addi
+
+        identifyInsType(arrInstruction);
+        storeOpFunct();
+        identifyRegisters(arrInstruction);
+        identifyImmediate(arrInstruction);
+        identifytarget(arrInstruction);
+        identifyShamt(arrInstruction);
+        storeInstruction();
+    }
+    private void storeOpFunct() {
+        if (insType == 1) {
+        opcode = rTypeMap.get(arrInstruction[0])[0];
+        funct = rTypeMap.get(arrInstruction[0])[1];
         }
-        if (indexIns >= 0) {
-            instruction = inMipsLine.substring(0,indexIns);
+
+        else if (insType == 2) {
+        opcode = iTypeMap.get(arrInstruction[0])[0];
+        }
+
+        else if (insType == 3) {
+        opcode = jTypeMap.get(arrInstruction[0])[0];
         }
 
     }
-    private void identifyInsType(String instruction) {
-        if (
-            instruction.equalsIgnoreCase("add") ||
-            instruction.equalsIgnoreCase("sll") ||
-            instruction.equalsIgnoreCase("and") ||
-            instruction.equalsIgnoreCase("or") ||
-            instruction.equalsIgnoreCase("nor") ||
-            instruction.equalsIgnoreCase("jr") ||
-            instruction.equalsIgnoreCase("slt")) {
+    private void identifyInsType(String[] inst) {
+        if (rTypeMap.containsKey(inst[0])) {
 
                 insType = 1;
         }
-        else if (
-            instruction.equalsIgnoreCase("addi") ||
-            instruction.equalsIgnoreCase("andi") ||
-            instruction.equalsIgnoreCase("ori") ||
-            instruction.equalsIgnoreCase("lw") ||
-            instruction.equalsIgnoreCase("sw") ||
-            instruction.equalsIgnoreCase("beq")) {
+        else if (iTypeMap.containsKey(inst[0])) {
 
                 insType = 2;
         }
-        else if (
-            instruction.equalsIgnoreCase("j") ||
-            instruction.equalsIgnoreCase("jal")) {
+        else if (jTypeMap.containsKey(inst[0])) {
 
                 insType = 3;
         }
     }
-    private void identifyOpcode() {
-        
-        if (insType == 1) {
-            opcode = 0;
-            if (instruction.equalsIgnoreCase("add")) {
-                funct = 32;
-            }
-            else if (instruction.equalsIgnoreCase("and")) {
-                funct = 36;
-            }
-            else if (instruction.equalsIgnoreCase("or")) {
-                funct = 37;
-            }
-            else if (instruction.equalsIgnoreCase("nor")) {
-                funct = 39;
-            }
-            else if (instruction.equalsIgnoreCase("sll")) {
-                funct = 0;
-            }
-            else if (instruction.equalsIgnoreCase("jr")) {
-                funct = 8;
-            }
-            else if (instruction.equalsIgnoreCase("slt")) {
-                funct = 42;
-            }
-        }
-        else if (insType == 2) {
-            if (instruction.equalsIgnoreCase("addi")) {
-                opcode = 8;
-            }
-            else if (instruction.equalsIgnoreCase("andi")) {
-                opcode = 12;
-            }
-            else if (instruction.equalsIgnoreCase("ori")) {
-                opcode = 13;
-            }
-            else if (instruction.equalsIgnoreCase("lw")) {
-                opcode = 35;
-            }
-            else if (instruction.equalsIgnoreCase("sw")) {
-                opcode = 43;
-            }
-            else if (instruction.equalsIgnoreCase("beq")) {
-                opcode = 4;
-            }
-        }
-        else if (insType == 3) {
-            if (instruction.equalsIgnoreCase("j")) {
-                opcode = 2;
-            }
-            else if (instruction.equalsIgnoreCase("jal")) {
-                opcode = 3;
-            }
-        }
-    }
-    private void identifyShamt() {
 
+    private void identifyShamt(String[] inst) {
+        if("sll".equalsIgnoreCase(inst[0])) {
+            shamt = Integer.parseInt(inst[3]);
+            rs = 0;
+        }
     }
-    private void identifyFunct() {
-        
+
+    private void identifyImmediate(String[] inst) {
+        if (insType == 2 && !"sw".equalsIgnoreCase(inst[0]) && !"lw".equalsIgnoreCase(inst[0])) {
+            immediate = Integer.parseInt(inst[3]);
+        }
     }
-    private void identifyImmediate() {
-        
+    private void identifytarget(String[] inst) {
+        if (insType == 3) {
+            target = Integer.parseInt(inst[1]);
+        }
     }
-    private void identifytarget() {
-        
-    }
-    private void identifyRs() {
-        
-    }
-    private void identifyRt() {
-        
-    }
-    private void identifyRd() {
-        
+    private void identifyRegisters(String[] inst) {
+        if(insType == 1 && !"jr".equalsIgnoreCase(inst[0])) {
+            rd = registersMap.get(inst[1]);
+            rs = registersMap.get(inst[2]);
+            rt = registersMap.get(inst[3]);
+        }
+        else if(insType == 1 && "jr".equalsIgnoreCase(inst[0])) {
+            rs = registersMap.get(inst[1]);
+        }
+        else if(insType == 2 && !"sw".equalsIgnoreCase(inst[0]) && !"lw".equalsIgnoreCase(inst[0])) {
+            rt = registersMap.get(inst[1]);
+            rs = registersMap.get(inst[2]);
+        }
+        else if(insType == 2 && ("sw".equalsIgnoreCase(inst[0]) || "lw".equalsIgnoreCase(inst[0]))) {
+            rt = registersMap.get(inst[1]);
+            immediate = Integer.parseInt(inst[2].substring(0,inst[2].indexOf("(")));//This will get the value from inst[2] at index 0 to the last index just before "("
+            rs = registersMap.get(inst[2].substring(inst[2].indexOf("(") + 1,inst[2].indexOf(")")));//This will get the register string between the parenthesis and then get the register value from the hashmap
+        }
     }
     private void storeInstruction() {
         if (insType == 1) { // stores the parsed R type instructions in Instruction memory
