@@ -1,22 +1,14 @@
 public class ControlUnit{
 
-    int[] controlSignals(int opCode, int func){
+    int[] controlSignals(int opCode){
         int[] output = new int[9];
 
         switch(opCode){
             //R-type instructions (add, and, sll, nor, slt)
             case 0:
-                // to distinguish between (jr) and the rest of R-type instructions
-                if(func==8){
-                output[1] = 1; output[2] = 0; 
-                output[3] = 0; output[6] = 0; output[8] = 0; 
-
-                }else{
                 output[0] = 1; output[1] = 0; output[2] = 0; 
                 output[3] = 0; output[4] = 0; output[5] = 2; 
                 output[6] = 0; output[7] = 0; output[8] = 1; 
-
-                }
             break;
             
             //I-type Arethmetic/Logic instructions (addi, andi, ori)
@@ -75,3 +67,4 @@ public class ControlUnit{
  }
 
 }
+
