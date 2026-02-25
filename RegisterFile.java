@@ -10,8 +10,8 @@ public class RegisterFile {
             return register[reg];
     }
 
-    public void writeRegister(int reg, int value, boolean regWrite) {
-        if (reg != 0 && regWrite) {
+    public void writeRegister(int reg, int value, int regWrite) {
+        if (reg != 0 && regWrite==0) {
             register[reg] = value;
         }
     }
