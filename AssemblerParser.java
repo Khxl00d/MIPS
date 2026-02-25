@@ -15,8 +15,8 @@ public class AssemblerParser {
     private String[] arrInstruction;
     private HashMap<String, Integer> registersMap = new HashMap<>();
     private HashMap<String, int[]> rTypeMap = new HashMap<>();
-    private HashMap<String, int[]> iTypeMap = new HashMap<>();
-    private HashMap<String, int[]> jTypeMap = new HashMap<>();
+    private HashMap<String, Integer> iTypeMap = new HashMap<>();
+    private HashMap<String, Integer> jTypeMap = new HashMap<>();
 
     public AssemblerParser(String inMipsLine) {
         this.inMipsLine = inMipsLine;
@@ -45,16 +45,16 @@ public class AssemblerParser {
         rTypeMap.put("jr",  new int[]{0, 8});
 
         //I-type Instructions funct is set as -1 or any other number because it wont be stored either way
-        iTypeMap.put("addi", new int[]{8, -1});
-        iTypeMap.put("andi", new int[]{12, -1});
-        iTypeMap.put("ori",  new int[]{13, -1});
-        iTypeMap.put("lw",   new int[]{35, -1});
-        iTypeMap.put("sw",   new int[]{43, -1});
-        iTypeMap.put("beq",  new int[]{4, -1});
+        iTypeMap.put("addi", 8);
+        iTypeMap.put("andi", 12);
+        iTypeMap.put("ori",  13);
+        iTypeMap.put("lw",   35);
+        iTypeMap.put("sw",   43);
+        iTypeMap.put("beq",  4);
 
         //J-type Instrucion
-        jTypeMap.put("j",    new int[]{2, -1});
-        jTypeMap.put("jal",  new int[]{3, -1});
+        jTypeMap.put("j",    2);
+        jTypeMap.put("jal",  3);
 
         arrInstruction = inMipsLine.split(" ");// if inMipsLine = addi $s0 $t0 5 then arrInstruction[0] = addi
 
@@ -73,11 +73,11 @@ public class AssemblerParser {
         }
 
         else if (insType == 2) {
-        opcode = iTypeMap.get(arrInstruction[0])[0];
+        opcode = iTypeMap.get(arrInstruction[0]);
         }
 
         else if (insType == 3) {
-        opcode = jTypeMap.get(arrInstruction[0])[0];
+        opcode = jTypeMap.get(arrInstruction[0]);
         }
 
     }

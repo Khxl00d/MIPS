@@ -15,9 +15,4 @@ public class RegisterFile {
             register[reg] = value;
         }
     }
-    public void displayReg() {
-        for(int i = 0; i < 32; i++) {
-            System.out.println(register[i]);
-        }
-    }
 }

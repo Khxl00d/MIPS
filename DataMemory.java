@@ -7,8 +7,8 @@ public class DataMemory {
         this.memory = new HashMap<>();
     }
     
-    int readData(int address, boolean readMem) {
-        if (readMem) {
+    int readData(int address, int readMem) {
+        if (readMem == 1) {
             return memory.getOrDefault(address, 0);
         }
         else {
@@ -16,8 +16,8 @@ public class DataMemory {
         }
     }
 
-    void writeData(int address, int value, boolean writeMem) {
-        if (writeMem) {
+    void writeData(int address, int value, int writeMem) {
+        if (writeMem == 1) {
             memory.put(address, value);
         }
     }
