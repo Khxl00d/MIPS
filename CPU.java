@@ -51,7 +51,7 @@ public class CPU {
         int Rt = instruction.getRt();
         int Shamt = instruction.getShamt();
         int Rd = instruction.getRd();
-        int value = registers.readRegister(Rt)<<Shamt;
+        int value = registers.readRegister(Rt)*2<<Shamt;
 
         registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
         PC.incrementPC();
