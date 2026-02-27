@@ -11,7 +11,7 @@ public class RegisterFile {
     }
 
     public void writeRegister(int reg, int value, int regWrite) {
-        if (reg != 0 && regWrite==0) {
+        if (reg != 0 && regWrite==1) {
             register[reg] = value;
         }
     }
