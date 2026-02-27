@@ -15,4 +15,8 @@ public class RegisterFile {
             register[reg] = value;
         }
     }
+
+    public int[] getAllRegisters() {
+        return this.register;
+    }
 }

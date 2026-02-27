@@ -6,6 +6,7 @@ public class CPU {
     DataMemory Memory;
     ControlUnit controlUnit;
     Instruction instruction;
+    InstructionMemory instMem;
 
 
     public CPU() {
@@ -13,13 +14,19 @@ public class CPU {
         this.registers = new RegisterFile();
         this.Memory = new DataMemory();
         this.controlUnit = new ControlUnit();
+        this.instruction = instMem.getInstruction(PC);
 
+        if (instruction.getOpcode() == 35) {
+            loadWord();
+        }
+        if (instruction.getOpcode() == 43) {
+            storeWord();
+        }
     }
 
-    public void loadWord(InstructionMemory loadMemory) {
+    public void loadWord() {
 
         PC.incrementPC();
-        instruction = loadMemory.getInstruction(PC);
          
         int Rt = instruction.getRt();
         int Rs = instruction.getRs();
@@ -30,10 +37,9 @@ public class CPU {
         registers.writeRegister(Rt, value, controlUnit.controlSignals(instruction.getOpcode())[8]);
     }
 
-    public void storeWord(InstructionMemory storeMemory) {
+    public void storeWord() {
         
         PC.incrementPC();
-        instruction = storeMemory.getInstruction(PC);
          
         int Rt = instruction.getRt();
         int Rs = instruction.getRs();
@@ -44,10 +50,9 @@ public class CPU {
         Memory.writeData(address,value,controlUnit.controlSignals(instruction.getOpcode())[6]);
     }
 
-    public void shiftLeftLogical(InstructionMemory shiftRd) {
+    public void shiftLeftLogical() {
 
         PC.incrementPC();
-        instruction = shiftRd.getInstruction(PC);
 
         int Rt = instruction.getRt();
         int Shamt = instruction.getShamt();
