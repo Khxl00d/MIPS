@@ -1,6 +1,7 @@
 import java.util.HashMap;
 
 public class AssemblerParser {
+    
     InstructionMemory saveIns;
     private String inMipsLine;
     private int insType; //R - type == 1 // I - Type == 2 // J - Type == 3
@@ -18,10 +19,9 @@ public class AssemblerParser {
     private HashMap<String, Integer> iTypeMap = new HashMap<>();
     private HashMap<String, Integer> jTypeMap = new HashMap<>();
 
-    public AssemblerParser(String inMipsLine) {
+    public AssemblerParser(String inMipsLine, InstructionMemory sharedInsMem) {
         this.inMipsLine = inMipsLine;
-
-        this.saveIns = new InstructionMemory();
+        this.saveIns = sharedInsMem;
 
         registersMap.put("$zero", 0);
         registersMap.put("$at", 1);

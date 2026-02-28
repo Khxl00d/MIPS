@@ -9,12 +9,21 @@ public class CPU {
     InstructionMemory instMem;
 
 
-    public CPU() {
+    public CPU(RegisterFile sharedRegisters, InstructionMemory sharedMemory) {
         this.PC = new ProgramCounter(0);
-        this.registers = new RegisterFile();
+        this.registers = sharedRegisters;
+        this.instMem = sharedMemory;
         this.Memory = new DataMemory();
-        this.controlUnit = new ControlUnit();
+        this.controlUnit = new ControlUnit();      
+    }
+
+    public void executeCPU() {
+
         this.instruction = instMem.getInstruction(PC);
+
+        if (instruction == null) return;
+
+        int opcode = instruction.getOpcode();
 
         if (instruction.getOpcode() == 35) {
             loadWord();
@@ -43,8 +52,6 @@ public class CPU {
         else if (instruction.getOpcode() == 0 && instruction.getFunct() == 36) {
             nor();
         }
-        
-        
     }
 
     public void loadWord() {

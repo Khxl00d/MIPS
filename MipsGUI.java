@@ -9,6 +9,10 @@ public class MipsGUI extends JFrame {
     private JTable editorTable;
     private DefaultTableModel editorModel;
     private RegisterFile registers;
+    private AssemblerParser parser;
+    private CPU cpu;
+    private InstructionMemory globalMemory = new InstructionMemory();
+
     public static void main(String[] args) {
         new MipsGUI();
     }
@@ -102,19 +106,29 @@ public class MipsGUI extends JFrame {
 
         //Establishing the connection between the GUI and Assembler Parser
         runButton.addActionListener(e -> {
+            terminal.setText(""); 
+            globalMemory = new InstructionMemory();
+
             for (int i = 0; i < editorTable.getRowCount(); i++) {
                 Object cellvalue = editorTable.getValueAt(i,2);
 
-                if (cellvalue != null) {
-                    String instructionStr = cellvalue.toString().trim();
-                    if(!instructionStr.isEmpty()) {
-                        // testing purposes only registers.writeRegister(15,50,1);
+                if (cellvalue != null && !cellvalue.toString().trim().isEmpty()) {
+
+                    if (cellvalue != null && !cellvalue.toString().trim().isEmpty()) {
+                        String instructionStr = cellvalue.toString().trim();
                         terminal.append("Assembling Line " + i + ": " + instructionStr + "\n");
-                        AssemblerParser parser = new AssemblerParser(instructionStr);
-                        updateReg(registers.getAllRegisters());
+                        new AssemblerParser(instructionStr,globalMemory);
                     }
                 }
             }
+            cpu = new CPU(this.registers,this.globalMemory);
+
+            while (cpu.PC.getPC()/4 < globalMemory.getSize()) {
+               cpu.executeCPU();
+            }
+
+            updateReg(registers.getAllRegisters());
+            terminal.append("Execution Successful.\n");
         });
 
         setVisible(true);

@@ -20,4 +20,8 @@ public class InstructionMemory {
     public void storeInstruction(Instruction inst) {
         insMem.add(inst);
     }
+
+    public int getSize() {
+        return insMem.size();
+    }
 }
