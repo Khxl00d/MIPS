@@ -51,6 +51,12 @@ public class CPU {
         else if (instruction.getOpcode() == 0 && instruction.getFunct() == 36) {
             nor();
         }
+        else if (instruction.getOpcode() == 2) {
+            jump();
+        }
+        else if (instruction.getOpcode() == 3) {
+            jumpAndLink();
+        }
     }
 
     public void loadWord() {
