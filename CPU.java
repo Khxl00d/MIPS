@@ -1,5 +1,4 @@
-
-
+import java.util.Stack;
 public class CPU {
     RegisterFile registers;
     ProgramCounter PC;
@@ -7,6 +6,8 @@ public class CPU {
     ControlUnit controlUnit;
     Instruction instruction;
     InstructionMemory instMem;
+    Adder adder;
+    Stack<Integer> TargetStack = new Stack<>();
 
 
     public CPU(RegisterFile sharedRegisters, InstructionMemory sharedMemory) {
@@ -169,6 +170,15 @@ public class CPU {
         int value=~(registers.readRegister(Rs)|registers.readRegister(Rt));
 
         registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
+    }
+
+    public void jump(){
+        PC.equals(instruction.getTarget());
+    }
+    public void jumpAndLink(){
+        PC.equals(instruction.getTarget());
+        registers.writeRegister(31, adder.NewAddress(instruction.getTarget(), 4), 1);
+        TargetStack.push(adder.NewAddress(instruction.getTarget(), 4));
     }
 }
 
