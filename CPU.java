@@ -34,6 +34,7 @@ public class CPU {
         else if (instruction.getOpcode() == 0 && instruction.getFunct() == 42) {
             setLessThan();
         }
+        else if ()
     }
 
     public void loadWord() {
@@ -115,4 +116,44 @@ public class CPU {
             registers.writeRegister(Rd,0,controlUnit.controlSignals(instruction.getOpcode())[8]);
         }
     }
+    public void or(){
+
+        PC.incrementPC();
+
+        int Rs=instruction.getRs();
+        int Rt=instruction.getRt();
+        int Rd=instruction.getRd();
+
+        int value=registers.readRegister(Rs)|registers.readRegister(Rt);
+
+        registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
+
+    }
+
+    public void orImmediate() {
+
+        PC.incrementPC();
+
+        int Rs=instruction.getRs();
+        int Rt=instruction.getRt();
+        int immediate=instruction.getImmediate();
+
+        int value=registers.readRegister(Rs)|immediate;
+
+        registers.writeRegister(Rt,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
+    }
+
+    public void nor() {
+
+        PC.incrementPC();
+
+        int Rs=instruction.getRs();
+        int Rt=instruction.getRt();
+        int Rd=instruction.getRd();
+
+        int value=~(registers.readRegister(Rs)|registers.readRegister(Rt));
+
+        registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
+    }
 }
+
