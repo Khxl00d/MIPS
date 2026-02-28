@@ -197,7 +197,7 @@ public class CPU {
         int Offset = instruction.getImmediate();
         
         if (registers.readRegister(Rs) - registers.readRegister(Rt) == 0) {
-             PC.setPC(PC.getPC() + offset);
+             PC.setPC(PC.getPC() + Offset);
         }
     }
 
