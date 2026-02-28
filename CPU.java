@@ -62,4 +62,45 @@ public class CPU {
         registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
     }
     
+    public void add() {
+
+        PC.incrementPC();
+
+        int Rs=instruction.getRs();
+        int Rt=instruction.getRt();
+        int Rd=instruction.getRd();
+
+        int value=registers.readRegister(Rs)+registers.readRegister(Rt);
+
+        registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
+    }
+
+    public void addi() {
+
+        PC.incrementPC();
+
+        int Rs=instruction.getRs();
+        int Rt=instruction.getRt();
+        int immediate=instruction.getImmediate();
+
+        int value=registers.readRegister(Rs)+immediate;
+
+        registers.writeRegister(Rt,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
+    }
+    
+    public void slt() {
+
+        PC.incrementPC();
+
+        int Rs=instruction.getRs();
+        int Rt=instruction.getRt();
+        int Rd=instruction.getRd();
+
+        if (registers.readRegister(Rs)<registers.readRegister(Rt)) {
+            registers.writeRegister(Rd,1,controlUnit.controlSignals(instruction.getOpcode())[8]);
+        }
+        else {
+            registers.writeRegister(Rd,0,controlUnit.controlSignals(instruction.getOpcode())[8]);
+        }
+    }
 }
