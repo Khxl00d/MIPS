@@ -74,7 +74,7 @@ public class AssemblerParser {
     private void parseLabel() {
         if (insType == 3) {
             if (!label.equalsIgnoreCase("")) {
-
+                target = pc;
             }
         } 
     }
