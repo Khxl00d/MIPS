@@ -7,6 +7,8 @@ public class CPU {
     Instruction instruction;
     InstructionMemory instMem;
     Adder adder;
+    ALU ALUOP;
+    ALUControl ALUCont;
     Stack<Integer> TargetStack = new Stack<>();
 
 
@@ -173,7 +175,7 @@ public class CPU {
         int Rt=instruction.getRt();
         int Rd=instruction.getRd();
 
-        int value=~(registers.readRegister(Rs)|registers.readRegister(Rt));
+        int value=~(ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
 
         registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
     }
