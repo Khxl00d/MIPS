@@ -56,7 +56,7 @@ public class AssemblerParser {
         jTypeMap.put("j",    2);
         jTypeMap.put("jal",  3);
 
-        arrInstruction = inMipsLine.split("[,\\\\s]+");// if inMipsLine = addi $s0 $t0 5 then arrInstruction[0] = addi
+        arrInstruction = inMipsLine.split(" ");// if inMipsLine = addi $s0 $t0 5 then arrInstruction[0] = addi
 
         identifyInsType(arrInstruction);
         storeOpFunct();
