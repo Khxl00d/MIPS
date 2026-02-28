@@ -186,5 +186,54 @@ public class CPU {
         registers.writeRegister(31, adder.NewAddress(instruction.getTarget(), 4), 1);
         TargetStack.push(adder.NewAddress(instruction.getTarget(), 4));
     }
+
+
+    public void branchEqual(){
+
+        PC.incrementPC();
+
+        int Rs=instruction.getRs();
+        int Rt=instruction.getRt();
+        int Offset = instruction.getImmediate();
+
+        int Rs_value = registers.readRegister(Rs);
+        int Rt_value = registers.readRegister(Rt);
+
+        if (Rs_value - Rt_value==0) {
+             PC.setPC(PC.getPC() + offset);
+        }
+    }
+
+
+    
+    public void and(){
+        
+        PC.incrementPC();
+
+        int Rs=instruction.getRs();
+        int Rt=instruction.getRt();
+        int Rd=instruction.getRd();
+
+        int value=(registers.readRegister(Rs) & registers.readRegister(Rt));
+        registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
+
+    }
+
+    
+
+    public void andImmediate(){
+
+        PC.incrementPC();
+
+        int Rs=instruction.getRs();
+        int Rt=instruction.getRt();
+        int immediate=instruction.getImmediate();
+
+        int value=registers.readRegister(Rs) & immediate;
+
+        registers.writeRegister(Rt,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
+
+
+    }
 }
 
