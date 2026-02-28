@@ -19,8 +19,20 @@ public class CPU {
         if (instruction.getOpcode() == 35) {
             loadWord();
         }
-        if (instruction.getOpcode() == 43) {
+        else if (instruction.getOpcode() == 43) {
             storeWord();
+        }
+        else if (instruction.getOpcode() == 0 && instruction.getFunct() == 0) {
+            shiftLeftLogical();
+        }
+        else if (instruction.getOpcode() == 0 && instruction.getFunct() == 32) {
+            addition();
+        }
+        else if (instruction.getOpcode() == 8) {
+            additionImmediate();
+        }
+        else if (instruction.getOpcode() == 0 && instruction.getFunct() == 42) {
+            setLessThan();
         }
     }
 
@@ -62,7 +74,7 @@ public class CPU {
         registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
     }
     
-    public void add() {
+    public void addition() {
 
         PC.incrementPC();
 
@@ -75,7 +87,7 @@ public class CPU {
         registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
     }
 
-    public void addi() {
+    public void additionImmediate() {
 
         PC.incrementPC();
 
@@ -88,7 +100,7 @@ public class CPU {
         registers.writeRegister(Rt,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
     }
     
-    public void slt() {
+    public void setLessThan() {
 
         PC.incrementPC();
 
