@@ -50,7 +50,7 @@ public class CPU {
         else if (instruction.getOpcode() == 12) {
             orImmediate();
         }
-        else if (instruction.getOpcode() == 0 && instruction.getFunct() == 36) {
+        else if (instruction.getOpcode() == 0 && instruction.getFunct() == 39) {
             nor();
         }
         else if (instruction.getOpcode() == 2) {
@@ -58,6 +58,15 @@ public class CPU {
         }
         else if (instruction.getOpcode() == 3) {
             jumpAndLink();
+        }
+        else if(instruction.getOpcode() == 4){
+            branchEqual();
+        }
+        else if(instruction.getOpcode() == 0 && instruction.getFunct() == 36){
+            and();
+        }
+        else if(instruction.getOpcode() == 12 ){
+            andImmediate();
         }
     }
 
