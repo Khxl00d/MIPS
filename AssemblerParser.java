@@ -4,6 +4,8 @@ public class AssemblerParser {
     
     InstructionMemory saveIns;
     private String inMipsLine;
+    private String label;
+    private int pc;
     private int insType; //R - type == 1 // I - Type == 2 // J - Type == 3
     private int opcode = 0;
     private int shamt = 0;
@@ -19,9 +21,11 @@ public class AssemblerParser {
     private HashMap<String, Integer> iTypeMap = new HashMap<>();
     private HashMap<String, Integer> jTypeMap = new HashMap<>();
 
-    public AssemblerParser(String inMipsLine, InstructionMemory sharedInsMem) {
+    public AssemblerParser(String inMipsLine, InstructionMemory sharedInsMem, String label, int pc) {
         this.inMipsLine = inMipsLine;
         this.saveIns = sharedInsMem;
+        this.label = label;
+        this.pc = pc;
 
         registersMap.put("$zero", 0);
         registersMap.put("$at", 1);
@@ -66,6 +70,15 @@ public class AssemblerParser {
         identifyShamt(arrInstruction);
         storeInstruction();
     }
+
+    private void parseLabel() {
+        if (insType == 3) {
+            if (!label.equalsIgnoreCase("")) {
+
+            }
+        } 
+    }
+
     private void storeOpFunct() {
         if (insType == 1) {
         opcode = rTypeMap.get(arrInstruction[0])[0];

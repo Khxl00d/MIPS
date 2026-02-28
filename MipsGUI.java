@@ -108,19 +108,26 @@ public class MipsGUI extends JFrame {
         runButton.addActionListener(e -> {
             terminal.setText(""); 
             globalMemory = new InstructionMemory();
+            String Label = "";
+            String strPc;
+            int pc;
 
             for (int i = 0; i < editorTable.getRowCount(); i++) {
                 Object cellvalue = editorTable.getValueAt(i,2);
+                Object cellLabel = editorTable.getValueAt(i,1);
+                Object cellPc = editorTable.getValueAt(i,0);
+
 
                 if (cellvalue != null && !cellvalue.toString().trim().isEmpty()) {
-
-                    if (cellvalue != null && !cellvalue.toString().trim().isEmpty()) {
-                        String instructionStr = cellvalue.toString().trim();
-                        terminal.append("Assembling Line " + i + ": " + instructionStr + "\n");
-                        new AssemblerParser(instructionStr,globalMemory);
-                    }
+                    String instructionStr = cellvalue.toString().trim();
+                    Label = cellLabel.toString().trim();
+                    strPc = cellPc.toString().trim();
+                    pc = Integer.parseInt(strPc);
+                    terminal.append("Assembling Line " + i + ": " + instructionStr + "\n");
+                    new AssemblerParser(instructionStr,globalMemory,Label,pc);
                 }
             }
+
             cpu = new CPU(this.registers,this.globalMemory);
 
             while (cpu.PC.getPC()/4 < globalMemory.getSize()) {

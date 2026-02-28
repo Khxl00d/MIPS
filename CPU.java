@@ -23,8 +23,6 @@ public class CPU {
 
         if (instruction == null) return;
 
-        int opcode = instruction.getOpcode();
-
         if (instruction.getOpcode() == 35) {
             loadWord();
         }
