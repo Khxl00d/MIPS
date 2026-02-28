@@ -68,6 +68,7 @@ public class AssemblerParser {
         identifyImmediate(arrInstruction);
         identifytarget(arrInstruction);
         identifyShamt(arrInstruction);
+        parseLabel();
         storeInstruction();
     }
 
