@@ -34,7 +34,17 @@ public class CPU {
         else if (instruction.getOpcode() == 0 && instruction.getFunct() == 42) {
             setLessThan();
         }
-        else if ()
+        else if (instruction.getOpcode() == 0 && instruction.getFunct() == 37) {
+            or();
+        }
+        else if (instruction.getOpcode() == 12) {
+            orImmediate();
+        }
+        else if (instruction.getOpcode() == 0 && instruction.getFunct() == 36) {
+            nor();
+        }
+        
+        
     }
 
     public void loadWord() {
