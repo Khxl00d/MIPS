@@ -7,6 +7,7 @@ public class CPU {
     Instruction instruction;
     InstructionMemory instMem;
     Adder adder;
+    Multiplexer MUX;
     ALU ALUOP;
     ALUControl ALUCont;
     Stack<Integer> TargetStack = new Stack<>();
@@ -17,7 +18,9 @@ public class CPU {
         this.registers = sharedRegisters;
         this.instMem = sharedMemory;
         this.Memory = new DataMemory();
-        this.controlUnit = new ControlUnit();      
+        this.controlUnit = new ControlUnit();  
+        adder = new Adder();
+        MUX = new Multiplexer();
     }
 
     public void executeCPU() {
