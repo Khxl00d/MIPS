@@ -199,46 +199,90 @@ public class CPU {
     }
 
 
-    public void branchEqual(){
+   public void branchEqual(){
 
         PC.incrementPC();
 
         int Rs=instruction.getRs();
         int Rt=instruction.getRt();
         int Offset = instruction.getImmediate();
+
+       //control wires
+        int Branch = controlUnit.controlSignals(instruction.getOpcode())[2];
+        int ALUSrc = controlUnit.controlSignals(instruction.getOpcode())[7];
+        int Jump = controlUnit.controlSignals(instruction.getOpcode())[1];
+        int Zero;
+
+        //returns value of Rt 
+        int ALU_Input = MUX.select(registers.readRegister(Rt),Offset,ALUSrc);
         
-        if (ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())) == 0) {
-             PC.setPC(PC.getPC() + Offset);
-        }
+        //set the value of wire Zero
+        if (ALUOP.ALUOutput(registers.readRegister(Rs),ALU_Input,ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())) == 0) {
+             Zero = 1;
+        }else {Zero = 0;}
+
+        int Branch_target =adder.NewAddress(PC.getPC() , Offset*4);
+
+        int Branch_mux = MUX.select(PC.getPC(),Branch_target, Branch & Zero);
+
+        //jump address wont be used so we assume its value is equal to 1
+        int Jump_mux = MUX.select(Branch_mux,1,Jump);
+        
+        //sets the PC value to Branch_target
+        PC.setPC(Jump_mux);
+
+
+
     }
 
 
     
-    public void and(){
+   public void and(){
         
         PC.incrementPC();
 
         int Rs=instruction.getRs();
         int Rt=instruction.getRt();
         int Rd=instruction.getRd();
+       
+       //wires
+        int RegDst = controlUnit.controlSignals(instruction.getOpcode())[0];
+        int ALUSrc = controlUnit.controlSignals(instruction.getOpcode())[7];
 
-        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
-        registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
+
+        int Write_register = MUX.select(Rt,Rd,RegDst);
+
+        //R-type instruction we dont have an immediate value so we assume it equals 1
+        int ALU_Input = MUX.select(registers.readRegister(Rt),1,ALUSrc);
+
+
+        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),ALU_Input,ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
+
+        registers.writeRegister(Write_register,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
 
     }
 
     
 
-    public void andImmediate(){
+   public void andImmediate(){
 
         PC.incrementPC();
 
         int Rs=instruction.getRs();
         int Rt=instruction.getRt();
         int immediate=instruction.getImmediate();
+       
+       //wires
+        int RegDst = controlUnit.controlSignals(instruction.getOpcode())[0];
+        int ALUSrc = controlUnit.controlSignals(instruction.getOpcode())[7];
 
-        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),immediate,ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
-        registers.writeRegister(Rt,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
+        //I-type instruction assume that Rd equals 1
+        int Write_register = MUX.select(Rt,1,RegDst);
+
+        int ALU_Input = MUX.select(registers.readRegister(Rt),immediate,ALUSrc);
+
+        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),ALU_Input,ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
+        registers.writeRegister(Write_register,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
 
 
     }
