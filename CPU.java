@@ -147,7 +147,8 @@ public class CPU {
 
         registers.writeRegister(Rd, ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())),controlUnit.controlSignals(instruction.getOpcode())[8]);
     }
-    public void or(){
+
+     public void or(){
 
         PC.incrementPC();
 
@@ -155,13 +156,23 @@ public class CPU {
         int Rt=instruction.getRt();
         int Rd=instruction.getRd();
 
-        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
+        //control wires
+        int RegDst = controlUnit.controlSignals(instruction.getOpcode())[0];
+        int ALUSrc = controlUnit.controlSignals(instruction.getOpcode())[7];
+
+        int Write_register = MUX.select(Rt,Rd,RegDst);
+
+        //R-type instruction so we assume offset equals 1
+        int ALU_Input = MUX.select(registers.readRegister(Rt),1,ALUSrc);
+
+        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),ALU_Input,ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
 
 
-        registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
+        registers.writeRegister(Write_register,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
 
     }
 
+    
     public void orImmediate() {
 
         PC.incrementPC();
@@ -170,11 +181,19 @@ public class CPU {
         int Rt=instruction.getRt();
         int immediate=instruction.getImmediate();
 
-        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),immediate,ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
+        //control wires
+        int RegDst = controlUnit.controlSignals(instruction.getOpcode())[0];
+        int ALUSrc = controlUnit.controlSignals(instruction.getOpcode())[7];
 
+        //I-type instruction assume that Rd equals 1
+        int Write_register = MUX.select(Rt,1,RegDst);
 
-        registers.writeRegister(Rt,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
+        int ALU_Input = MUX.select(registers.readRegister(Rt),immediate,ALUSrc);
+
+        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),ALU_Input,ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
+        registers.writeRegister(Write_register,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
     }
+    
 
     public void nor() {
 
