@@ -217,9 +217,23 @@ public class CPU {
 
     }
 
-    public void jump(){
-        PC.setPC(instruction.getTarget());
+      public void jump(){
+        PC.incrementPC();
+
+        //control wire
+        int Jump = controlUnit.controlSignals(instruction.getOpcode())[1];
+
+        // since our simulator is a small project we assume that the apper 4 bits of PC+4 are always 0000 
+        // so we skip the concatenation part
+        int target = instruction.getTarget() * 4;
+        // we are in a J-type instruction so we assume the branch value is 0
+        int Jump_mux = MUX.select(0,target ,Jump);
+        PC.setPC(Jump_mux);
     }
+
+
+
+    
     public void jumpAndLink(){
         registers.writeRegister(31, adder.NewAddress(instruction.getTarget(), 4), 1);
         TargetStack.push(adder.NewAddress(instruction.getTarget(), 4));
