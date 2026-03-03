@@ -18,6 +18,9 @@ public class ALUControl {
             else if (function == 42) {
                 return 4;
             }
+            else if (function == 39){
+                return 5;
+            }
         }
         else if (ALUop == 0) {
             return 0;
@@ -29,3 +32,4 @@ public class ALUControl {
         return -1;
     }
 }
+
