@@ -113,15 +113,28 @@ public class CPU {
     
     public void addition() {
 
-        PC.incrementPC();
+      PC.incrementPC();
 
         int Rs=instruction.getRs();
         int Rt=instruction.getRt();
         int Rd=instruction.getRd();
 
-        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));;
+        //control wires
+        int RegDst = controlUnit.controlSignals(instruction.getOpcode())[0];
+        int ALUSrc = controlUnit.controlSignals(instruction.getOpcode())[7];
+        int MemtoReg = controlUnit.controlSignals(instruction.getOpcode())[4];
 
-        registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
+        int Write_register = MUX.select(Rt,Rd,RegDst);
+
+        //R-type instruction so we assume offset equals 1
+        int ALU_Input = MUX.select(registers.readRegister(Rt),1,ALUSrc);
+
+        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),ALU_Input,ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
+
+        int MemtoReg_mux = MUX.select(value,1,MemtoReg);
+        if(MemtoReg_mux==value){
+          registers.writeRegister(Write_register,value,controlUnit.controlSignals(instruction.getOpcode())[8]);  
+        }
     }
 
     public void additionImmediate() {
@@ -150,7 +163,7 @@ public class CPU {
 
      public void or(){
 
-        PC.incrementPC();
+       PC.incrementPC();
 
         int Rs=instruction.getRs();
         int Rt=instruction.getRt();
@@ -159,6 +172,7 @@ public class CPU {
         //control wires
         int RegDst = controlUnit.controlSignals(instruction.getOpcode())[0];
         int ALUSrc = controlUnit.controlSignals(instruction.getOpcode())[7];
+        int MemtoReg = controlUnit.controlSignals(instruction.getOpcode())[4];
 
         int Write_register = MUX.select(Rt,Rd,RegDst);
 
@@ -167,9 +181,10 @@ public class CPU {
 
         int value=(ALUOP.ALUOutput(registers.readRegister(Rs),ALU_Input,ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
 
-
-        registers.writeRegister(Write_register,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
-
+        int MemtoReg_mux = MUX.select(value,1,MemtoReg);
+        if(MemtoReg_mux==value){
+          registers.writeRegister(Write_register,value,controlUnit.controlSignals(instruction.getOpcode())[8]);  
+        }
     }
 
     
@@ -206,16 +221,22 @@ public class CPU {
         //control wires
         int RegDst = controlUnit.controlSignals(instruction.getOpcode())[0];
         int ALUSrc = controlUnit.controlSignals(instruction.getOpcode())[7];
+        int MemtoReg = controlUnit.controlSignals(instruction.getOpcode())[4];
 
         int Write_register = MUX.select(Rt,Rd,RegDst);
 
         //R-type instruction so we assume offset equals 1
         int ALU_Input = MUX.select(registers.readRegister(Rt),1,ALUSrc);
 
-        int value = (ALUOP.ALUOutput(registers.readRegister(Rs),ALU_Input,ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
-        registers.writeRegister(Write_register,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
+        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),ALU_Input,ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
+
+        int MemtoReg_mux = MUX.select(value,1,MemtoReg);
+        if(MemtoReg_mux==value){
+          registers.writeRegister(Write_register,value,controlUnit.controlSignals(instruction.getOpcode())[8]);  
+        }
 
     }
+    
 
       public void jump(){
         PC.incrementPC();
@@ -294,21 +315,23 @@ public class CPU {
         int Rs=instruction.getRs();
         int Rt=instruction.getRt();
         int Rd=instruction.getRd();
-       
-       //wires
+
+        //control wires
         int RegDst = controlUnit.controlSignals(instruction.getOpcode())[0];
         int ALUSrc = controlUnit.controlSignals(instruction.getOpcode())[7];
-
+        int MemtoReg = controlUnit.controlSignals(instruction.getOpcode())[4];
 
         int Write_register = MUX.select(Rt,Rd,RegDst);
 
-        //R-type instruction we dont have an immediate value so we assume it equals 1
+        //R-type instruction so we assume offset equals 1
         int ALU_Input = MUX.select(registers.readRegister(Rt),1,ALUSrc);
-
 
         int value=(ALUOP.ALUOutput(registers.readRegister(Rs),ALU_Input,ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
 
-        registers.writeRegister(Write_register,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
+        int MemtoReg_mux = MUX.select(value,1,MemtoReg);
+        if(MemtoReg_mux==value){
+          registers.writeRegister(Write_register,value,controlUnit.controlSignals(instruction.getOpcode())[8]);  
+        }
 
     }
 
