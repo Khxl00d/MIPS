@@ -171,7 +171,22 @@ public class CPU {
         int Rt=instruction.getRt();
         int Rd=instruction.getRd();
 
-        registers.writeRegister(Rd, ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())),controlUnit.controlSignals(instruction.getOpcode())[8]);
+        //control wires
+        int RegDst = controlUnit.controlSignals(instruction.getOpcode())[0];
+        int ALUSrc = controlUnit.controlSignals(instruction.getOpcode())[7];
+        int MemtoReg = controlUnit.controlSignals(instruction.getOpcode())[4];
+
+        int Write_register = MUX.select(Rt,Rd,RegDst);
+
+        //R-type instruction so we assume offset equals 1
+        int ALU_Input = MUX.select(registers.readRegister(Rt),1,ALUSrc);
+
+        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),ALU_Input,ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
+
+        int MemtoReg_mux = MUX.select(value,1,MemtoReg);
+        if(MemtoReg_mux==value){
+          registers.writeRegister(Write_register,value,controlUnit.controlSignals(instruction.getOpcode())[8]);  
+        }
     }
 
      public void or(){
