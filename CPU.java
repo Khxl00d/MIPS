@@ -234,10 +234,18 @@ public class CPU {
 
 
     
-    public void jumpAndLink(){
-        registers.writeRegister(31, adder.NewAddress(instruction.getTarget(), 4), 1);
-        TargetStack.push(adder.NewAddress(instruction.getTarget(), 4));
-        PC.setPC(instruction.getTarget());
+   public void jumpAndLink(){
+        PC.incrementPC();
+
+        //store the value of PC+4 into $ra
+        registers.writeRegister(31, PC.getPC(), 1);
+
+        // since our simulator is a small project we assume that the apper 4 bits of PC+4 are always 0000 
+        // so we skip the concatenation part
+        int target = instruction.getTarget() * 4;
+
+        TargetStack.push(target);
+        PC.setPC(target);
     }
 
 
