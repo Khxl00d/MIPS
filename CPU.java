@@ -108,10 +108,19 @@ public class CPU {
         int Rt = instruction.getRt();
         int Rs = instruction.getRs();
         int Offset = instruction.getImmediate();
-        int address = adder.NewAddress(registers.readRegister(Rs),Offset);
+
+        //control wires
+        int RegDst = controlUnit.controlSignals(instruction.getOpcode())[0];
+        int ALUSrc = controlUnit.controlSignals(instruction.getOpcode())[7];
+        int MemtoReg = controlUnit.controlSignals(instruction.getOpcode())[4];
+        int MemWrite = controlUnit.controlSignals(instruction.getOpcode())[6];
+
+        int ALU_Input = MUX.select(registers.readRegister(Rt),Offset,ALUSrc);
+
+        int address = (ALUOP.ALUOutput(registers.readRegister(Rs),ALU_Input,ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
         int value = registers.readRegister(Rt);
         
-        Memory.writeData(address,value,controlUnit.controlSignals(instruction.getOpcode())[6]);
+        Memory.writeData(address,value,MemWrite);
     }
 
     public void shiftLeftLogical() {
