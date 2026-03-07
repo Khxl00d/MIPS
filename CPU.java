@@ -80,10 +80,25 @@ public class CPU {
         int Rt = instruction.getRt();
         int Rs = instruction.getRs();
         int Offset = instruction.getImmediate();
-        int address = adder.NewAddress(registers.readRegister(Rs),Offset);
-        int value = Memory.readData(address,controlUnit.controlSignals(instruction.getOpcode())[3]);
 
-        registers.writeRegister(Rt, value, controlUnit.controlSignals(instruction.getOpcode())[8]);
+        //control wires
+        int RegDst = controlUnit.controlSignals(instruction.getOpcode())[0];
+        int ALUSrc = controlUnit.controlSignals(instruction.getOpcode())[7];
+        int MemtoReg = controlUnit.controlSignals(instruction.getOpcode())[4];
+        int MemRead = controlUnit.controlSignals(instruction.getOpcode())[3];
+        
+        //I-type instruction assume that Rd equals 1
+        int Write_register = MUX.select(Rt,1,RegDst);
+
+        int ALU_Input = MUX.select(registers.readRegister(Rt),Offset,ALUSrc);
+
+        int address = (ALUOP.ALUOutput(registers.readRegister(Rs),ALU_Input,ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())));
+        
+        int value = Memory.readData(address,MemRead);
+
+        int MemtoReg_mux = MUX.select(0,value,MemtoReg);
+        
+        registers.writeRegister(Write_register, MemtoReg_mux, controlUnit.controlSignals(instruction.getOpcode())[8]);
     }
 
     public void storeWord() {
