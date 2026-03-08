@@ -124,13 +124,17 @@ public class AssemblerParser {
         }
     }
     private void identifyRegisters(String[] inst) {
-        if(insType == 1 && !"jr".equalsIgnoreCase(inst[0])) {
+        if(insType == 1 && (!"jr".equalsIgnoreCase(inst[0]) && !"sll".equalsIgnoreCase(inst[0]))) {
             rd = registersMap.get(inst[1]);
             rs = registersMap.get(inst[2]);
             rt = registersMap.get(inst[3]);
         }
         else if(insType == 1 && "jr".equalsIgnoreCase(inst[0])) {
             rs = registersMap.get(inst[1]);
+        }
+        else if(insType == 1 && "sll".equalsIgnoreCase(inst[0])) {
+            rd = registersMap.get(inst[1]);
+            rs = registersMap.get(inst[2]);
         }
         else if(insType == 2 && !"sw".equalsIgnoreCase(inst[0]) && !"lw".equalsIgnoreCase(inst[0])) {
             rt = registersMap.get(inst[1]);
