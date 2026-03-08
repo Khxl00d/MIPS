@@ -1,10 +1,9 @@
 import java.util.HashMap;
 
 public class AssemblerParser {
-    
+    //deleted the label and parselabel since we wont use labels, just kept the displaytarget.
     InstructionMemory saveIns;
     private String inMipsLine;
-    private String label;
     private int pc;
     private int insType; //R - type == 1 // I - Type == 2 // J - Type == 3
     private int opcode = 0;
@@ -21,10 +20,9 @@ public class AssemblerParser {
     private HashMap<String, Integer> iTypeMap = new HashMap<>();
     private HashMap<String, Integer> jTypeMap = new HashMap<>();
 
-    public AssemblerParser(String inMipsLine, InstructionMemory sharedInsMem, String label, int pc) {
+    public AssemblerParser(String inMipsLine, InstructionMemory sharedInsMem, int pc) {
         this.inMipsLine = inMipsLine;
         this.saveIns = sharedInsMem;
-        this.label = label;
         this.pc = pc;
 
         registersMap.put("$zero", 0);
@@ -68,17 +66,9 @@ public class AssemblerParser {
         identifyImmediate(arrInstruction);
         identifytarget(arrInstruction);
         identifyShamt(arrInstruction);
-        parseLabel();
         storeInstruction();
     }
 
-    private void parseLabel() {
-        if (insType == 3) {
-            if (!label.equalsIgnoreCase("")) {
-                target = pc;
-            }
-        } 
-    }
 
     private void storeOpFunct() {
         if (insType == 1) {
