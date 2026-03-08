@@ -31,6 +31,10 @@ public class Instruction{
         this.shamt= shamt;
         this.funct= funct;
     }
+    
+    public String toString() {
+        return "Instruction (" + "Opcode=" + opcode + ", rs=" + rs + ", rt=" + rt + ", rd=" + rd + ", immediate=" + immediate + ", target=" + target + ", funct=" + funct + ")";
+    }
 
     public int getOpcode() {
         return opcode;
