@@ -2,7 +2,8 @@ import java.util.HashMap;
 
 public class AssemblerParser {
     //deleted the label and parselabel since we wont use labels, just kept the displaytarget.
-    InstructionMemory saveIns;
+    private InstructionMemory saveIns;
+    private RegisterFile registers;
     private String inMipsLine;
     private int pc;
     private int insType; //R - type == 1 // I - Type == 2 // J - Type == 3
@@ -20,10 +21,11 @@ public class AssemblerParser {
     private HashMap<String, Integer> iTypeMap = new HashMap<>();
     private HashMap<String, Integer> jTypeMap = new HashMap<>();
 
-    public AssemblerParser(String inMipsLine, InstructionMemory sharedInsMem, int pc) {
+    public AssemblerParser(String inMipsLine, InstructionMemory sharedInsMem, int pc, RegisterFile registers) {
         this.inMipsLine = inMipsLine;
         this.saveIns = sharedInsMem;
         this.pc = pc;
+        this.registers = registers;
 
         registersMap.put("$zero", 0);
         registersMap.put("$at", 1);
@@ -113,7 +115,11 @@ public class AssemblerParser {
         }
     }
     private void identifytarget(String[] inst) {
-        if (insType == 3) {
+        if (insType == 3 && "jal".equalsIgnoreCase(inst[0])) {
+            target = Integer.parseInt(inst[1]);
+            registers.writeRegister(31, pc+4, 1);
+        }
+        else if (insType == 3 && !"jal".equalsIgnoreCase(inst[0])) {
             target = Integer.parseInt(inst[1]);
         }
     }
