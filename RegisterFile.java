@@ -19,6 +19,9 @@ public class RegisterFile {
     public int[] getAllRegisters() {
         return this.register;
     }
+    public String[] getRegString() {
+        return registerStrings;
+    }
 
     public void displayRegisters() {
         System.out.println("\n |Register State| "); 
