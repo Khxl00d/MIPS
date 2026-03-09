@@ -1,7 +1,6 @@
 import java.util.HashMap;
 
 public class AssemblerParser {
-    //deleted the label and parselabel since we wont use labels, just kept the displaytarget.
     private InstructionMemory saveIns;
     private RegisterFile registers;
     private String inMipsLine;

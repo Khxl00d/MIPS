@@ -2,6 +2,7 @@ public class ALUControl {
 
     public int getALUControl(int ALUop, int function) {
 
+        //R-type
         if (ALUop == 2) {
             if (function == 32) {
                 return 0;
@@ -22,9 +23,11 @@ public class ALUControl {
                 return 5;
             }
         }
+        //sw lw
         else if (ALUop == 0) {
             return 0;
         }
+        //beq
         else if (ALUop == 1) {
             return 1;
         }
