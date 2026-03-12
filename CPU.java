@@ -207,10 +207,10 @@ public class CPU {
 
         int Rs=instruction.getRs();
         int Rt=instruction.getRt();
-        int Offset = instruction.getImmediate();
-        
-        if (ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct(),instruction.getOpcode())) == 0) {
-             PC.setPC(PC.getPC() + Offset);
+        int immediate = instruction.getImmediate();
+
+        if ((ALUOP.ALUOutput(registers.readRegister(Rs), registers.readRegister(Rt), ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct() ,instruction.getOpcode()))) == 0) {
+             PC.setPC(immediate);
         }
     }
 
