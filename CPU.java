@@ -10,15 +10,15 @@ public class CPU {
     ALUControl ALUCont;
 
 
-    public CPU(RegisterFile sharedRegisters, InstructionMemory sharedMemory) {
-        this.PC = new ProgramCounter(0);
+    public CPU(RegisterFile sharedRegisters, InstructionMemory sharedMemory, ProgramCounter pc) {
+        this.PC = pc;
         this.registers = sharedRegisters;
         this.instMem = sharedMemory;
         this.Memory = new DataMemory();
         this.controlUnit = new ControlUnit();
         this.ALUOP = new ALU();
         this.ALUCont = new ALUControl();
-        this.adder = new Adder();     
+        this.adder = new Adder();   
     }
 
     public void executeCPU() {
@@ -117,7 +117,7 @@ public class CPU {
         int Rt=instruction.getRt();
         int Rd=instruction.getRd();
 
-        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct())));
+        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct(), instruction.getOpcode())));
 
         registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
     }
@@ -130,7 +130,7 @@ public class CPU {
         int Rt=instruction.getRt();
         int immediate=instruction.getImmediate();
 
-        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),immediate,ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct())));
+        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),immediate,ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct(), instruction.getOpcode())));
 
         registers.writeRegister(Rt,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
     }
@@ -143,7 +143,7 @@ public class CPU {
         int Rt=instruction.getRt();
         int Rd=instruction.getRd();
 
-        registers.writeRegister(Rd, ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())),controlUnit.controlSignals(instruction.getOpcode())[8]);
+        registers.writeRegister(Rd, ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct(), instruction.getOpcode())),controlUnit.controlSignals(instruction.getOpcode())[8]);
     }
     public void or(){
 
@@ -153,7 +153,7 @@ public class CPU {
         int Rt=instruction.getRt();
         int Rd=instruction.getRd();
 
-        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct())));
+        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct(), instruction.getOpcode())));
 
 
         registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
@@ -168,8 +168,7 @@ public class CPU {
         int Rt=instruction.getRt();
         int immediate=instruction.getImmediate();
 
-        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),immediate,ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct())));
-
+        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),immediate,ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct(),instruction.getOpcode())));
 
         registers.writeRegister(Rt,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
     }
@@ -182,7 +181,7 @@ public class CPU {
         int Rt=instruction.getRt();
         int Rd=instruction.getRd();
 
-        int value=~(ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct())));
+        int value=~(ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct(), instruction.getOpcode())));
 
         registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
     }
@@ -204,7 +203,7 @@ public class CPU {
         int Rt=instruction.getRt();
         int Offset = instruction.getImmediate();
         
-        if (ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(instruction.getOpcode(),instruction.getFunct())) == 0) {
+        if (ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct(),instruction.getOpcode())) == 0) {
              PC.setPC(PC.getPC() + Offset);
         }
     }
@@ -219,7 +218,7 @@ public class CPU {
         int Rt=instruction.getRt();
         int Rd=instruction.getRd();
 
-        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct())));
+        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct(),instruction.getOpcode())));
         registers.writeRegister(Rd,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
 
     }
@@ -234,7 +233,7 @@ public class CPU {
         int Rt=instruction.getRt();
         int immediate=instruction.getImmediate();
 
-        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),immediate,ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct())));
+        int value=(ALUOP.ALUOutput(registers.readRegister(Rs),immediate,ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct(),instruction.getOpcode())));
         registers.writeRegister(Rt,value,controlUnit.controlSignals(instruction.getOpcode())[8]);
 
 
