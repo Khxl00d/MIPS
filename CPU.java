@@ -190,7 +190,7 @@ public class CPU {
         PC.setPC(instruction.getTarget());
     }
     public void jumpAndLink(){
-        registers.writeRegister(31, adder.NewAddress(instruction.getTarget(), 4), 1);
+        registers.writeRegister(31, adder.NewAddress(PC.getPC(), 4), 1);
         PC.setPC(instruction.getTarget());
     }
 
