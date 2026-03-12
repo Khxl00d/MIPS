@@ -8,10 +8,9 @@ public class Main {
         InstructionMemory instructionMemory = new InstructionMemory();
         ProgramCounter pc = new ProgramCounter(0);
         RegisterFile registers = new RegisterFile();
-        CPU cpu = new CPU(registers,instructionMemory);
+        CPU cpu = new CPU(registers,instructionMemory, pc);
         RegisterTable regTable = new RegisterTable(registers);
         System.out.println("Mips Processor (type '0' to exit)");
-        
         do { 
             regTable.update(registers.getAllRegisters());
             System.out.print("[" + pc.getPC() + "]: ");
@@ -20,8 +19,9 @@ public class Main {
             AssemblerParser parser = new AssemblerParser(mipsCode, instructionMemory, pc.getPC(), registers);
             Instruction instruction = instructionMemory.getInstruction(pc);
             cpu.executeCPU();
-            System.out.println(instruction.toString());
-            pc.incrementPC();
+            if (instruction != null) {
+                System.out.println(instruction.toString());
+            }
             }
         } while (!mipsCode.equals("0"));
         System.out.println("Exiting and printing registers:");
