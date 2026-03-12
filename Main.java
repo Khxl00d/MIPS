@@ -22,20 +22,17 @@ public class Main {
             if (instruction != null) {
                 System.out.println(instruction.toString());
             }
-            if(instruction.getOpcode() == 2 || instruction.getOpcode() == 3){
+            if(instruction.getOpcode() == 2 || instruction.getOpcode() == 3 && instruction.getTarget() < pc.getPC()){
                 while(true){
-                    if (!(pc.getPC() <= instruction.getTarget())){
-                    System.out.println(instruction.getTarget());
-                    AssemblerParser parser1 = new AssemblerParser(mipsCode, instructionMemory, pc.getPC(), registers, pc);
                     Instruction instruction1 = instructionMemory.getInstruction(pc);
-                    regTable.update(registers.getAllRegisters());
+                    if (instruction1 != null){
                     System.out.println("\nLooping..");
                     System.out.print("[" + pc.getPC() + "]: ");
+                    regTable.update(registers.getAllRegisters());
                     System.out.println(instruction1.toString());
                     cpu.executeCPU();
                     }
                     else{
-                        pc.setPC(instruction.getTarget());
                         break;
                     }
                 }
