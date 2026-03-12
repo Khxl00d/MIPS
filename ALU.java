@@ -9,9 +9,12 @@ public class ALU {
             case 3: result = readData1 | readData2; break;
             case 4: result = readData1 - readData2; if(result > 0){result = 0;} else{ result = 1;} break;
             case 5: result = ~(readData1 | readData2); break;
+            //assume readData2 is shamt, readData1 is rt
+            case 6: result = readData1 << readData2; break;
             default:
                 result = 0;
         }
         return result;
     }
 }
+
