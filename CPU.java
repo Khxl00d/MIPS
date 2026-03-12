@@ -60,6 +60,9 @@ public class CPU {
         else if (instruction.getOpcode() == 3) {
             jumpAndLink();
         }
+        else if (instruction.getOpcode() == 0 && instruction.getFunct() == 8) {
+            jumpRegister();
+        }
         else if(instruction.getOpcode() == 4){
             branchEqual();
         }
@@ -192,6 +195,9 @@ public class CPU {
     public void jumpAndLink(){
         registers.writeRegister(31, adder.NewAddress(PC.getPC(), 4), 1);
         PC.setPC(instruction.getTarget());
+    }
+    public void jumpRegister(){
+        PC.setPC(registers.readRegister(instruction.getRs()));
     }
 
 

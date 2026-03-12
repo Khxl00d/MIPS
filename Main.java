@@ -16,11 +16,29 @@ public class Main {
             System.out.print("[" + pc.getPC() + "]: ");
             mipsCode = scan.nextLine();
             if(!mipsCode.equals("0")){
-            AssemblerParser parser = new AssemblerParser(mipsCode, instructionMemory, pc.getPC(), registers);
+            AssemblerParser parser = new AssemblerParser(mipsCode, instructionMemory, pc.getPC(), registers, pc);
             Instruction instruction = instructionMemory.getInstruction(pc);
             cpu.executeCPU();
             if (instruction != null) {
                 System.out.println(instruction.toString());
+            }
+            if(instruction.getOpcode() == 2 || instruction.getOpcode() == 3){
+                while(true){
+                    if (!(pc.getPC() <= instruction.getTarget())){
+                    System.out.println(instruction.getTarget());
+                    AssemblerParser parser1 = new AssemblerParser(mipsCode, instructionMemory, pc.getPC(), registers, pc);
+                    Instruction instruction1 = instructionMemory.getInstruction(pc);
+                    regTable.update(registers.getAllRegisters());
+                    System.out.println("\nLooping..");
+                    System.out.print("[" + pc.getPC() + "]: ");
+                    System.out.println(instruction1.toString());
+                    cpu.executeCPU();
+                    }
+                    else{
+                        pc.setPC(instruction.getTarget());
+                        break;
+                    }
+                }
             }
             }
         } while (!mipsCode.equals("0"));

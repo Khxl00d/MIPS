@@ -4,6 +4,7 @@ public class AssemblerParser {
     private InstructionMemory saveIns;
     private RegisterFile registers;
     private String inMipsLine;
+    private ProgramCounter programCounter;
     private int pc;
     private int insType; //R - type == 1 // I - Type == 2 // J - Type == 3
     private int opcode = 0;
@@ -20,11 +21,12 @@ public class AssemblerParser {
     private HashMap<String, Integer> iTypeMap = new HashMap<>();
     private HashMap<String, Integer> jTypeMap = new HashMap<>();
 
-    public AssemblerParser(String inMipsLine, InstructionMemory sharedInsMem, int pc, RegisterFile registers) {
+    public AssemblerParser(String inMipsLine, InstructionMemory sharedInsMem, int pc, RegisterFile registers, ProgramCounter programCounter) {
         this.inMipsLine = inMipsLine;
         this.saveIns = sharedInsMem;
         this.pc = pc;
         this.registers = registers;
+        this.programCounter = programCounter;
 
         registersMap.put("$zero", 0);
         registersMap.put("$at", 1);
@@ -148,15 +150,15 @@ public class AssemblerParser {
     private void storeInstruction() {
         if (insType == 1) { // stores the parsed R type instructions in Instruction memory
             Instruction intIns = new Instruction(opcode, rs, rt, rd, shamt, funct);
-            saveIns.storeInstruction(intIns);
+            saveIns.storeInstruction(intIns, programCounter);
         }
         else if (insType == 2) { // stores the parsed I type instructions in Instruction memory
             Instruction intIns = new Instruction(opcode, rs, rt, immediate);
-            saveIns.storeInstruction(intIns);
+            saveIns.storeInstruction(intIns, programCounter);
         }
         else if (insType == 3) { // stores the parsed J type instructions in Instruction memory
             Instruction intIns = new Instruction(opcode, target);
-            saveIns.storeInstruction(intIns);
+            saveIns.storeInstruction(intIns, programCounter);
         }
     }
 }
