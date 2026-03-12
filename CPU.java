@@ -146,6 +146,7 @@ public class CPU {
         int Rt=instruction.getRt();
         int Rd=instruction.getRd();
 
+        ALUOP.ALUOutput(registers.readRegister(Rs), registers.readRegister(Rt), ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct(),instruction.getOpcode()));
         registers.writeRegister(Rd, ALUOP.ALUOutput(registers.readRegister(Rs),registers.readRegister(Rt),ALUCont.getALUControl(controlUnit.controlSignals(instruction.getOpcode())[5],instruction.getFunct(), instruction.getOpcode())),controlUnit.controlSignals(instruction.getOpcode())[8]);
     }
     public void or(){
