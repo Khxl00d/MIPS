@@ -22,6 +22,10 @@ public class ALUControl {
             else if (function == 39){ //nor
                 return 5;
             }
+            else if(function == 0){//sll
+                return 6;
+            }
+                
         }
         //I-type
         else if (opCode == 8){ //addi
@@ -45,4 +49,5 @@ public class ALUControl {
         return -1;
     }
 }
+
 
