@@ -135,7 +135,7 @@ public class AssemblerParser {
         }
         else if(insType == 1 && "sll".equalsIgnoreCase(inst[0])) {
             rd = registersMap.get(inst[1]);
-            rs = registersMap.get(inst[2]);
+            rt = registersMap.get(inst[2]);
         }
         else if(insType == 2 && !"sw".equalsIgnoreCase(inst[0]) && !"lw".equalsIgnoreCase(inst[0])) {
             rt = registersMap.get(inst[1]);

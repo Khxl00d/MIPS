@@ -33,7 +33,7 @@ public class Instruction{
     }
     
     public String toString() {
-        return "Instruction (" + "Opcode=" + opcode + ", rs=" + rs + ", rt=" + rt + ", rd=" + rd + ", immediate=" + immediate + ", target=" + target + ", funct=" + funct + ")";
+        return "Instruction (" + "Opcode=" + opcode + ", rs=" + rs + ", rt=" + rt + ", rd=" + rd + ", immediate=" + immediate + ", target=" + target + ", funct=" + funct +", shamt=" + shamt + ")";
     }
 
     public int getOpcode() {
