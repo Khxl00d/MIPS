@@ -50,7 +50,7 @@ public class CPU {
         else if (instruction.getOpcode() == 0 && instruction.getFunct() == 37) {
             or();
         }
-        else if (instruction.getOpcode() == 12) {
+        else if (instruction.getOpcode() == 13) {
             orImmediate();
         }
         else if (instruction.getOpcode() == 0 && instruction.getFunct() == 39) {
