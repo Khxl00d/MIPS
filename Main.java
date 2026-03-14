@@ -27,9 +27,7 @@ public class Main {
                     Instruction instruction1 = instructionMemory.getInstruction(pc);
                     if (instruction1 != null){
                     System.out.println("\nLooping..");
-                    System.out.print("[" + pc.getPC() + "]: ");
                     regTable.update(registers.getAllRegisters());
-                    System.out.println(instruction1.toString());
                     cpu.executeCPU();
                     }
                     else{

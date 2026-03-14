@@ -50,7 +50,7 @@ public class CPU {
         else if (instruction.getOpcode() == 0 && instruction.getFunct() == 37) {
             or();
         }
-        else if (instruction.getOpcode() == 12) {
+        else if (instruction.getOpcode() == 13) {
             orImmediate();
         }
         else if (instruction.getOpcode() == 0 && instruction.getFunct() == 39) {
@@ -383,7 +383,7 @@ public class CPU {
              Zero = 1;
         }else {Zero = 0;}
 
-        int Branch_target =adder.NewAddress(PC.getPC() , Offset);
+        int Branch_target =Offset;
 
         int Branch_mux = MUX.select(PC.getPC(),Branch_target, Branch & Zero);
 
