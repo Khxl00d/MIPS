@@ -20,7 +20,7 @@ public class ControlUnit{
                 output[6] = 0; output[7] = 1; output[8] = 1;  
             break;
 
-            //Load instructions (lw)
+            //Load instruction (lw)
             case 35: 
                 output[0] = 0; output[1] = 0; output[2] = 0; 
                 output[3] = 1; output[4] = 1; output[5] = 0; 
