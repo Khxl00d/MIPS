@@ -383,7 +383,7 @@ public class CPU {
              Zero = 1;
         }else {Zero = 0;}
 
-        int Branch_target =adder.NewAddress(PC.getPC() , Offset);
+        int Branch_target =Offset;
 
         int Branch_mux = MUX.select(PC.getPC(),Branch_target, Branch & Zero);
 
